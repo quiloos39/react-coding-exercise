@@ -1,6 +1,11 @@
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { CheckboxQuestionInterface, MultipleQuestionInterface, QuestionType, TextQuestionInterface } from "../data/questions";
+import {
+  CheckboxQuestionInterface,
+  MultipleQuestionInterface,
+  QuestionType,
+  TextQuestionInterface,
+} from "../data/questions";
 import { NextButton } from "./NextButton";
 import { ReviewButton } from "./ReviewButton";
 
@@ -12,7 +17,7 @@ function MultipleQuestion({ question }: MultipleQuestionProps) {
   const { control } = useFormContext();
   return (
     <div>
-      <p>{question.question}</p>
+      <p className="font-bold">{question.question}</p>
       <Controller
         control={control}
         name={question.name}
@@ -37,8 +42,11 @@ function TextQuestion({ question }: TextQuestionProps) {
   const { register } = useFormContext();
   return (
     <div>
-      <p>{question.question}</p>
-      <input {...register(question.name, { value: "Age of Empires 2" })} className="border px-2 py-2" />
+      <p className="font-bold">{question.question}</p>
+      <input
+        {...register(question.name, { value: "Age of Empires 2" })}
+        className="border px-2 py-2"
+      />
     </div>
   );
 }
@@ -52,7 +60,7 @@ function CheckboxQuestion({ question }: CheckboxQuestionProps) {
 
   return (
     <div>
-      <p>{question.question}</p>
+      <p className="font-bold">{question.question}</p>
       <Controller
         name={question.name}
         control={control}
@@ -61,7 +69,11 @@ function CheckboxQuestion({ question }: CheckboxQuestionProps) {
             {question.answers.map((answer) => (
               <div key={answer} className="space-x-2">
                 <label>{answer}</label>
-                <input type="checkbox" onChange={() => onChange(answer)} checked={answer === value} />
+                <input
+                  type="checkbox"
+                  onChange={() => onChange(answer)}
+                  checked={answer === value}
+                />
               </div>
             ))}
           </div>
@@ -78,7 +90,12 @@ interface QuestionProps {
   noQuestions: number;
 }
 
-export function Question({ question, hidden, onClick, noQuestions }: QuestionProps) {
+export function Question({
+  question,
+  hidden,
+  onClick,
+  noQuestions,
+}: QuestionProps) {
   const { watch } = useFormContext();
 
   const btnDisabled = watch(question.name) === undefined;

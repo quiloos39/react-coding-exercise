@@ -13,19 +13,9 @@ export interface CustomButtonProps {
   disabled?: ButtonProps["disabled"];
 }
 
-export function Button({
-  children,
-  extraClass = "",
-  onClick,
-  disabled = false,
-}: ButtonProps) {
+export function Button({ children, extraClass = "", onClick, disabled = false }: ButtonProps) {
   return (
-    <button
-      className={"py-2 px-20 " + extraClass}
-      disabled={disabled}
-      onClick={onClick}
-      type="button"
-    >
+    <button className={"py-2 px-20 " + extraClass} disabled={disabled} onClick={onClick} type="button">
       {children}
     </button>
   );

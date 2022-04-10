@@ -11,14 +11,6 @@ export function PickleRick() {
     toggleTheme();
   }
   return (
-    <img
-      alt=""
-      src={Rick}
-      className={
-        "fixed right-10 bottom-5 cursor-pointer h-24 w-24 " +
-        (!clicked ? "animate-bounce" : "")
-      }
-      onClick={onClick}
-    />
+    <img alt="" src={Rick} className={"fixed right-10 bottom-5 cursor-pointer h-24 w-24 " + (!clicked ? "animate-bounce" : "")} onClick={onClick} />
   );
 }

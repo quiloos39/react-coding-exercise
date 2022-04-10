@@ -1,108 +1,96 @@
-import React from "react";
-import { Controller, useFormContext } from "react-hook-form";
-import { CheckboxQuestionInterface, MultipleQuestionInterface, QuestionType, TextQuestionInterface } from "../data/questions";
+import { useState } from "react";
+import { QuestionType } from "../data/questions";
 import { NextButton } from "./NextButton";
 import { ReviewButton } from "./ReviewButton";
 
-interface MultipleQuestionProps {
-  question: MultipleQuestionInterface;
+interface DefaultInputProps {
+  onChange: (value: string) => void;
 }
 
-function MultipleQuestion({ question }: MultipleQuestionProps) {
-  const { control } = useFormContext();
-  return (
-    <div>
-      <p className="font-bold">{question.question}</p>
-      <Controller
-        control={control}
-        name={question.name}
-        render={({ field: { onChange, value } }) => (
-          <select defaultValue="Select" onChange={onChange} value={value}>
-            <option disabled>Select</option>
-            {question.answers.map((answer) => (
-              <option key={answer}>{answer}</option>
-            ))}
-          </select>
-        )}
-      />
-    </div>
-  );
+interface MultipleQuestionProps extends DefaultInputProps {
+  answers: string[];
 }
 
-interface TextQuestionProps {
-  question: TextQuestionInterface;
-}
+function MultipleInput({ answers, onChange }: MultipleQuestionProps) {
+  const [selected, setSelected] = useState<string>("Select");
 
-function TextQuestion({ question }: TextQuestionProps) {
-  const { register } = useFormContext();
-  return (
-    <div>
-      <p className="font-bold">{question.question}</p>
-      <input {...register(question.name, { value: "Age of Empires 2" })} className="border px-2 py-2" />
-    </div>
-  );
-}
-
-interface CheckboxQuestionProps {
-  question: CheckboxQuestionInterface;
-}
-
-function CheckboxQuestion({ question }: CheckboxQuestionProps) {
-  const { control } = useFormContext();
-
-  return (
-    <div>
-      <p className="font-bold">{question.question}</p>
-      <Controller
-        name={question.name}
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <div>
-            {question.answers.map((answer) => (
-              <div key={answer} className="space-x-2">
-                <label>{answer}</label>
-                <input type="checkbox" onChange={() => onChange(answer)} checked={answer === value} />
-              </div>
-            ))}
-          </div>
-        )}
-      />
-    </div>
-  );
-}
-
-interface QuestionProps {
-  question: QuestionType;
-  hidden: boolean;
-  onClick: () => void;
-  noQuestions: number;
-}
-
-export function Question({ question, hidden, onClick, noQuestions }: QuestionProps) {
-  const { watch } = useFormContext();
-
-  const btnDisabled = watch(question.name) === undefined;
-
-  const nextOrReviewBtn =
-    noQuestions === question.questionNo ? (
-      <ReviewButton onClick={onClick} disabled={btnDisabled} />
-    ) : (
-      <NextButton onClick={onClick} disabled={btnDisabled} />
-    );
-
-  let questionComponent;
-
-  if (question.type === "checkbox") {
-    questionComponent = <CheckboxQuestion question={question} />;
-  } else if (question.type === "text") {
-    questionComponent = <TextQuestion question={question} />;
-  } else if (question.type === "multiplechooice") {
-    questionComponent = <MultipleQuestion question={question} />;
+  function handleChange(value: string) {
+    setSelected(value);
+    onChange(value);
   }
 
   return (
-    <div className={hidden ? "hidden" : "block"}>
-      <div className="mb-5">{questionComponent}</div>
+    <select onChange={(e) => handleChange(e.target.value)} value={selected}>
+      <option disabled>Select</option>
+      {answers.map((answer) => (
+        <option key={answer}>{answer}</option>
+      ))}
+    </select>
+  );
+}
+
+interface TextQuestionProps extends DefaultInputProps {}
+
+function TextInput({ onChange }: TextQuestionProps) {
+  return <input className="border px-2 py-2" onChange={(e) => onChange(e.target.value)} />;
+}
+
+interface CheckboxQuestionProps extends DefaultInputProps {
+  answers: string[];
+}
+
+function CheckboxInput({ answers, onChange }: CheckboxQuestionProps) {
+  const [selected, setSelected] = useState<string>("");
+
+  function handleChange(value: string) {
+    setSelected(value);
+    onChange(value);
+  }
+
+  return (
+    <div>
+      {answers.map((answer) => (
+        <div key={answer} className="space-x-2">
+          <label>{answer}</label>
+          <input type="checkbox" onChange={() => handleChange(answer)} checked={selected === answer} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+interface QuestionProps extends DefaultInputProps {
+  question: QuestionType;
+  noQuestions: number;
+  disabled: boolean;
+  onNext: () => void;
+  onReview: () => void;
+}
+
+export default function Question({ question, noQuestions, onChange, disabled, onNext, onReview }: QuestionProps) {
+  let answer;
+
+  if (question.type === "checkbox") {
+    answer = <CheckboxInput answers={question.answers} onChange={onChange} />;
+  } else if (question.type === "text") {
+    answer = <TextInput onChange={onChange} />;
+  } else if (question.type === "multiplechooice") {
+    answer = <MultipleInput onChange={onChange} answers={question.answers} />;
+  }
+
+  const nextOrReviewBtn =
+    question.questionNo === noQuestions ? (
+      <ReviewButton onClick={onReview} disabled={disabled} />
+    ) : (
+      <NextButton onClick={onNext} disabled={disabled} />
+    );
+
+  return (
+    <div>
+      <p className="font-bold">{`Question: ${question.questionNo}/${noQuestions}`}</p>
+      <hr className="my-5" />
+      <p className="font-bold">{question.question}</p>
+      <div className="mb-5">{answer}</div>
       {nextOrReviewBtn}
     </div>
   );

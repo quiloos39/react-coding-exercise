@@ -4,7 +4,7 @@ import QUESTIONS from "../data/questions";
 import Question from "../components/Question";
 
 export function QuestionPage() {
-  const { control, getValues } = useFormContext();
+  const { control } = useFormContext();
   const params = useParams();
   const navigate = useNavigate();
   const questionNo = Number(params.questionNo);
@@ -24,8 +24,7 @@ export function QuestionPage() {
   }
 
   function onReview() {
-    const formData = getValues();
-    navigate("/review/" + JSON.stringify(formData));
+    navigate("/review");
   }
 
   return (

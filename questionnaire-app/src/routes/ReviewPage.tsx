@@ -1,19 +1,15 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useFormContext } from "react-hook-form";
+import { Review } from "../components/Review";
+import QUESTIONS from "../data/questions";
 
 export function ReviewPage() {
-  const params = useParams();
-  const data = JSON.parse(params.result);
-  return (
-    <div>
-      <h1 className="font-bold text-3xl">Review</h1>
-      <hr className="my-5" />
-      {Object.entries(data).map((entry, index) => (
-        <p key={index}>
-          <span className="font-bold">{entry[0]}: </span>
-          {entry[1]}
-        </p>
-      ))}
-    </div>
-  );
+  const { getValues } = useFormContext();
+  const formData = Object.values(getValues());
+  const data = QUESTIONS.map((question, index) => ({
+    question: question.question,
+    answer: formData[index],
+  }));
+
+  return <Review data={data} />;
 }

@@ -25,7 +25,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Navigate to="question/1" replace />} />
             <Route path="/question/:questionNo" element={<QuestionPage />} />
-            <Route path="/review/:result" element={<ReviewPage />} />
+            <Route path="/review" element={<ReviewPage />} />
             <Route path="*" element={<ErrorPage />} />
           </Routes>
         </Content>

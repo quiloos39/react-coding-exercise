@@ -8,7 +8,6 @@ interface ReviewProps {
 }
 
 export function Review({ data }: ReviewProps) {
-  console.log(data);
   return (
     <div>
       <h1 className="text-3xl font-bold mb-5">Review</h1>

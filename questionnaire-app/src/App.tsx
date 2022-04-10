@@ -10,23 +10,36 @@ import { Review } from "./components/Review";
 
 export default function App() {
   const [questionIndex, setQuestionIndex] = useState<number>(1); // Keeps track of question number
-  const [showReview, setShowReview] = useState<boolean>(false);
+  const [showReview, setShowReview] = useState<boolean>(false); // Displays review component depending on value
   const form = useForm();
 
+  // Next and review button handlers
   function onClick() {
+    // If we didn't react to end we will increase question number
     if (questionIndex < QUESTIONS.length) {
       setQuestionIndex(questionIndex + 1);
+      // If we reached to end will show review
     } else {
       setShowReview(true);
     }
   }
 
+  // Loads dark or light theme
   useEffect(() => {
     loadTheme();
   }, []);
 
+  // Form answers
+  const answers = Object.values(form.getValues());
+
+  // Depending on showReview will display either form or review component
   const formOrReview = showReview ? (
-    <Review />
+    <Review
+      data={QUESTIONS.map((question, index) => ({
+        question: question.question,
+        answer: answers[index],
+      }))}
+    />
   ) : (
     <form>
       {QUESTIONS.map((question) => {

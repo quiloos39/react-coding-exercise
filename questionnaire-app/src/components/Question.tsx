@@ -20,7 +20,7 @@ function MultipleInput({ answers, onChange }: MultipleQuestionProps) {
   }
 
   return (
-    <select onChange={(e) => handleChange(e.target.value)} value={selected}>
+    <select onChange={(e) => handleChange(e.target.value)} value={selected} data-testid="multiple-input">
       <option disabled>Select</option>
       {answers.map((answer) => (
         <option key={answer}>{answer}</option>
@@ -32,7 +32,7 @@ function MultipleInput({ answers, onChange }: MultipleQuestionProps) {
 interface TextQuestionProps extends DefaultInputProps {}
 
 function TextInput({ onChange }: TextQuestionProps) {
-  return <input className="border px-2 py-2" onChange={(e) => onChange(e.target.value)} />;
+  return <input className="border px-2 py-2" onChange={(e) => onChange(e.target.value)} data-testid="text-input" />;
 }
 
 interface CheckboxQuestionProps extends DefaultInputProps {
@@ -48,7 +48,7 @@ function CheckboxInput({ answers, onChange }: CheckboxQuestionProps) {
   }
 
   return (
-    <div>
+    <div data-testid="checkbox-input">
       {answers.map((answer) => (
         <div key={answer} className="space-x-2">
           <label>{answer}</label>
